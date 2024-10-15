@@ -1,10 +1,12 @@
-import {CompanyModel, UserModel} from "../models";
+import { CompanyModel } from "../models";
 import {CompanyCreateInterface} from "../common/interfaces/company.create.interface";
 import {Types} from "mongoose";
+import { DeleteCompanyResponse} from "../common/interfaces/responses.interface";
+import {CompanyInterface} from "../common/interfaces/modelInterfaces/company.interface";
 
 
 class CompanyRepository{
-	async create(data: CompanyCreateInterface){
+	async create(data: CompanyCreateInterface):Promise<CompanyInterface>{
 		try {
 			return CompanyModel.create(data)
 		}catch (e) {
@@ -12,13 +14,13 @@ class CompanyRepository{
 		}
 	}
 
-	async getAll(){
+	async getAll():Promise<CompanyInterface[]>{
 		return CompanyModel.find()
 	}
 
-	async getById(id: Types.ObjectId | string){
+	async getById(id: Types.ObjectId | string):Promise<CompanyInterface>{
 		try {
-			const company = await CompanyModel.findById(id); // Exclude password
+			const company = await CompanyModel.findById(id);
 			if (!company) {
 				throw new Error('Company not found');
 			}
@@ -28,7 +30,7 @@ class CompanyRepository{
 		}
 	}
 
-	async update(id: string | Types.ObjectId, data: Partial<CompanyCreateInterface>) {
+	async update(id: string | Types.ObjectId, data: Partial<CompanyCreateInterface>):Promise<CompanyInterface> {
 		try {
 			const company = await CompanyModel.findByIdAndUpdate(id, data, { new: true, runValidators: true });
 			if (!company) {
@@ -40,7 +42,7 @@ class CompanyRepository{
 		}
 	}
 
-	async deleteCompany(id: string | Types.ObjectId) {
+	async deleteCompany(id: string | Types.ObjectId):Promise<DeleteCompanyResponse> {
 		try {
 			const result = await CompanyModel.findByIdAndDelete(id);
 			if (!result) {

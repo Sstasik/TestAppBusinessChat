@@ -3,10 +3,11 @@ import { UserCreateInterface } from '../common/interfaces/user.create.interface'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {Types} from "mongoose";
+import {UserAuthResponse} from "../common/interfaces/responses.interface";
 
 class AuthService {
 
-	async registration(data: UserCreateInterface) {
+	async registration(data: UserCreateInterface):Promise<UserAuthResponse> {
 		try {
 			const existingUser = await UserService.getByEmail(data.email)
 			if (existingUser) {
@@ -30,7 +31,7 @@ class AuthService {
 		}
 	}
 
-	async login(email: string, password: string) {
+	async login(email: string, password: string):Promise<UserAuthResponse> {
 		try {
 			const user = await UserService.getByEmail(email)
 			if (!user) {
@@ -58,7 +59,7 @@ class AuthService {
 		}
 	}
 
-	private generateToken(userId: Types.ObjectId, role: string) {
+	private generateToken(userId: Types.ObjectId, role: string): string {
 		const secret = process.env.JWT_SECRET || 'your_jwt_secret';
 		const token = jwt.sign({ id: userId, role }, secret, {
 			expiresIn: '6h',

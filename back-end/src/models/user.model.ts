@@ -2,8 +2,9 @@ import { Schema, model } from "mongoose"
 import bcrypt from 'bcrypt';
 
 import {RoleEnum} from "../common/enums/role.enum";
+import {UserInterface} from "../common/interfaces/modelInterfaces/user.interface";
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<UserInterface>({
 	email: { type: String, unique: true, required: true },
 	username: { type: String, required: true },
 	password: { type: String, required: true, select: false },

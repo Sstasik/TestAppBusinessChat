@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from 'express';
 import { UserService } from "../services"
 
 class UserController{
-	async getAll(req: Request, res: Response, next: NextFunction){
+	async getAll(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const users = await UserService.getAll()
 			res.status(200).json(users)
@@ -11,7 +11,7 @@ class UserController{
 		}
 	}
 
-	async getById(req: Request, res: Response, next: NextFunction){
+	async getById(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const id = req.params.id
 			const user = await UserService.getById(id)
@@ -21,7 +21,7 @@ class UserController{
 		}
 	}
 
-	async setUserPremiumAccount(req: Request, res: Response, next: NextFunction){
+	async setUserPremiumAccount(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const id = req.params.id
 			const user = await UserService.setUserPremiumAccount(id)
@@ -31,10 +31,21 @@ class UserController{
 		}
 	}
 
-	async setUserNotPremiumAccount(req: Request, res: Response, next: NextFunction){
+	async setUserNotPremiumAccount(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const id = req.params.id
 			const user = await UserService.setUserNotPremiumAccount(id)
+			res.status(200).json(user)
+		}catch (e) {
+			next(e)
+		}
+	}
+
+	async changeRole(req: Request, res: Response, next: NextFunction):Promise<void>{
+		try {
+			const id = req.params.id
+			const { role } = req.body
+			const user = await UserService.changeRole(id, role)
 			res.status(200).json(user)
 		}catch (e) {
 			next(e)

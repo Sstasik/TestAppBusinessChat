@@ -3,7 +3,7 @@ import { CompanyService } from "../services"
 
 class CompanyController{
 
-	async create(req: Request, res: Response, next: NextFunction){
+	async create(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const body = req.body
 			const company = await CompanyService.create({...body, admin: req.user?.id})
@@ -12,7 +12,7 @@ class CompanyController{
 			next(e)
 		}
 	}
-	async getAll(req: Request, res: Response, next: NextFunction){
+	async getAll(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const companies = await CompanyService.getAll()
 			res.status(200).json(companies)
@@ -21,7 +21,7 @@ class CompanyController{
 		}
 	}
 
-	async getById(req: Request, res: Response, next: NextFunction){
+	async getById(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
 			const id = req.params.id
 			const company = await CompanyService.getById(id)
@@ -31,7 +31,7 @@ class CompanyController{
 		}
 	}
 
-	async update(req: Request, res: Response, next: NextFunction) {
+	async update(req: Request, res: Response, next: NextFunction):Promise<void> {
 		try {
 			const id = req.params.id;
 			const updateData = req.body;
@@ -42,7 +42,7 @@ class CompanyController{
 		}
 	}
 
-	async delete(req: Request, res: Response, next: NextFunction) {
+	async delete(req: Request, res: Response, next: NextFunction):Promise<void> {
 		try {
 			const id = req.params.id;
 			const deleteResult = await CompanyService.deleteCompany(id);

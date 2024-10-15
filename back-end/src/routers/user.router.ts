@@ -3,16 +3,18 @@ import { Router } from 'express';
 import { UserController } from "../controllers"
 
 import authMiddleware from "../middlwares/guards/auth.guard"
-import adminMiddleware from "../middlwares/guards/admin.guard";
+import superAdminMiddleware from "../middlwares/guards/superAdmin.guard"
 
 const userRouter: Router = Router();
 
-userRouter.get('/', UserController.getAll)
+userRouter.get('/', authMiddleware, superAdminMiddleware, UserController.getAll)
 
 userRouter.get('/:id', authMiddleware, UserController.getById)
 
-userRouter.get('setPremium/:id', authMiddleware, adminMiddleware, UserController.setUserPremiumAccount)
+userRouter.get('setPremium/:id', authMiddleware, superAdminMiddleware, UserController.setUserPremiumAccount)
 
-userRouter.get('setPremium/:id', authMiddleware, adminMiddleware, UserController.setUserNotPremiumAccount)
+userRouter.get('setPremium/:id', authMiddleware, superAdminMiddleware, UserController.setUserNotPremiumAccount)
+
+userRouter.patch('/changeRole/:id', authMiddleware, superAdminMiddleware, UserController.changeRole)
 
 export default userRouter;

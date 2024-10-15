@@ -14,8 +14,8 @@ export class ChatService{
 				}
 			);
 			return response.data
-		} catch (error) {
-			throw new Error(`Failed to get a response from the API: ${error}`)
+		} catch (e) {
+			throw new Error(`Failed to get a response from the API: ${e}`)
 		}
 	}
 }

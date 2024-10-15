@@ -4,7 +4,7 @@ import {RoleEnum} from "../../common/enums/role.enum";
 import {UserPayload} from "../../common/interfaces/user.payload.interface";
 import {ErrorInterface} from "../../common/interfaces/error.interface";
 
-const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const superAdminMiddleware = (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.headers.authorization;
 	const token = authHeader && authHeader.split(' ')[1];
 
@@ -23,7 +23,7 @@ const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
 		const user = decoded as UserPayload;
 
-		if (user.role !== RoleEnum.ADMIN) {
+		if (user.role !== RoleEnum.SUPER_ADMIN) {
 			const error: ErrorInterface = new Error('Permission denied');
 			error.statusCode = 403;
 			return next(error);
@@ -33,4 +33,4 @@ const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
 	});
 };
 
-export default adminMiddleware;
+export default superAdminMiddleware;
