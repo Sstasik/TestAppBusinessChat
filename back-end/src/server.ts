@@ -13,7 +13,6 @@ app.use(express.json());
 
 app.use('/', routers);
 
-
 app.get('/', (req: Request, res: Response) => {
 	res.send('Hello from Express + TypeScript!');
 });
