@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
+import {ErrorInterface} from "../../common/interfaces/error.interface";
 
-interface ErrorInterface extends Error {
-	statusCode?: number;
-}
 
 const errorMiddleware = (err: ErrorInterface, req: Request, res: Response, next: NextFunction): void => {
 	const statusCode = err.statusCode || 500;

@@ -11,12 +11,20 @@ class UserService{
 		return UserRepository.getAll()
 	}
 
-	async getById(id: Types.ObjectId){
+	async getById(id: Types.ObjectId | string){
 		return UserRepository.getById(id)
 	}
 
 	async getByEmail(email: string){
 		return UserRepository.getByEmail(email)
+	}
+
+	async setUserPremiumAccount(id: Types.ObjectId | string){
+		return UserRepository.setUserPremiumAccount(id)
+	}
+
+	async setUserNotPremiumAccount(id: Types.ObjectId | string){
+		return UserRepository.setUserNotPremiumAccount(id)
 	}
 }
 

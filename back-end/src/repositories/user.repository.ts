@@ -16,7 +16,7 @@ class UserRepository{
     return UserModel.find()
 	}
 
-	async getById(userId: Types.ObjectId){
+	async getById(userId: Types.ObjectId | string){
 		try {
 			const user = await UserModel.findById(userId); // Exclude password
 			if (!user) {
@@ -31,6 +31,35 @@ class UserRepository{
 	async getByEmail(email: string) {
 		const user = await UserModel.findOne({email}).select('+password');
 		return user;
+	}
+
+
+	async setUserPremiumAccount(id: string | Types.ObjectId) {
+		try {
+			const user = await UserModel.findById(id);
+			if (!user) {
+				throw new Error('User not found');
+			}
+			user.isPremium = true;
+			await user.save();
+			return user;
+		} catch (e) {
+			throw new Error(`Server error: ${e}`)
+		}
+	}
+
+	async setUserNotPremiumAccount(id: string | Types.ObjectId){
+		try {
+			const user = await UserModel.findById(id);
+			if (!user) {
+				throw new Error('User not found');
+			}
+			user.isPremium = false;
+			await user.save();
+			return user;
+		} catch (e) {
+			throw new Error(`Server error: ${e}`)
+		}
 	}
 }
 
