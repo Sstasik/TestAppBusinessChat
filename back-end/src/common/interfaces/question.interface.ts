@@ -1,13 +1,16 @@
 
-interface Question{
+interface Nodes{
 	id: string;
 	type: string;
 	data: { label: string; value: string };
-	measured?: { width: number; height: number };
 	position: { x: number; y: number };
+	measured?: { width: number; height: number };
+	origin?: [number, number];
+	selected?: boolean
+	dragging?: boolean
 };
 
-interface Answer {
+interface Edges {
 	id: string;
 	type: string;
 	data: { label: string; value: string };
@@ -17,6 +20,6 @@ interface Answer {
 };
 
 export interface BotTree{
-	nodes: Question[];
-	edges: Answer[];
+	nodes: Nodes[];
+	edges: Edges[];
 };
