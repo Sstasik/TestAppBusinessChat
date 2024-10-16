@@ -3,14 +3,16 @@ import {UserCreateInterface} from "../common/interfaces/user.create.interface";
 import {Types} from "mongoose";
 import {UserInterface} from "../common/interfaces/modelInterfaces/user.interface";
 import {RoleEnum} from "../common/enums/role.enum";
+import {HttpException} from "../middlwares/errror-handling/httpException";
+import {handleServiceError} from "../middlwares/errror-handling/throwException";
 
 
 class UserRepository{
 	async create(user: UserCreateInterface):Promise<UserInterface>{
 		try {
 			return UserModel.create(user)
-		}catch (e){
-			throw new Error(`Server error: ${e}`)
+		}catch (e: HttpException | unknown){
+			throw new HttpException(500, `Server error: ${e}`)
 		}
 	}
 
@@ -18,15 +20,15 @@ class UserRepository{
     return UserModel.find()
 	}
 
-	async getById(userId: Types.ObjectId | string):Promise<UserInterface>{
+	async getById(userId: Types.ObjectId | string){
 		try {
-			const user = await UserModel.findById(userId); // Exclude password
+			const user = await UserModel.findById(userId);
 			if (!user) {
-				throw new Error('User not found');
+				throw new HttpException(404,'User not found');
 			}
 			return user;
-		} catch (error) {
-			throw new Error('Error fetching user by ID: ' + error);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -38,29 +40,23 @@ class UserRepository{
 
 	async setUserPremiumAccount(id: string | Types.ObjectId):Promise<UserInterface> {
 		try {
-			const user = await UserModel.findById(id);
-			if (!user) {
-				throw new Error('User not found');
-			}
+			const user = await this.getById(id)
 			user.isPremium = true;
 			await user.save();
 			return user;
-		} catch (e) {
-			throw new Error(`Server error: ${e}`)
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
 	async setUserNotPremiumAccount(id: string | Types.ObjectId):Promise<UserInterface>{
 		try {
-			const user = await UserModel.findById(id);
-			if (!user) {
-				throw new Error('User not found');
-			}
+			const user = await this.getById(id);
 			user.isPremium = false;
 			await user.save();
 			return user;
-		} catch (e) {
-			throw new Error(`Server error: ${e}`)
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -73,12 +69,12 @@ class UserRepository{
 			);
 
 			if (!user) {
-				throw new Error(`User with id ${id} not found`);
+				throw new HttpException(404, `User with id ${id} not found`);
 			}
 
 			return user;
-		} catch (e) {
-			throw new Error(`Failed to change role: ${e}`);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 }

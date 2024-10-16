@@ -1,4 +1,5 @@
 import axios from "axios";
+import {HttpException} from "../middlwares/errror-handling/httpException";
 
 export class ChatService{
 	async sendMessage(userInput: string){
@@ -14,8 +15,8 @@ export class ChatService{
 				}
 			);
 			return response.data
-		} catch (e) {
-			throw new Error(`Failed to get a response from the API: ${e}`)
+		} catch (e: unknown | HttpException) {
+			throw new HttpException(500, `Failed to get a response from the API: ${e}`)
 		}
 	}
 }

@@ -3,32 +3,38 @@ import { AnswerCreateInterface} from "../common/interfaces/answer.create.interfa
 import {Types} from "mongoose";
 import {AnswerInterface} from "../common/interfaces/modelInterfaces/answer.interface";
 import {DeleteAnswerResponse} from "../common/interfaces/responses.interface";
+import {handleServiceError} from "../middlwares/errror-handling/throwException";
+import {HttpException} from "../middlwares/errror-handling/httpException";
 
 
 class AnswerRepository{
 	async create(data: AnswerCreateInterface):Promise<AnswerInterface>{
 		try {
 			return AnswerModel.create(data)
-		}catch (e) {
-			throw new Error(`Server error: ${e}`)
+		}catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
 	async getAll(companyId: string | Types.ObjectId):Promise<AnswerInterface[]>{
-		return AnswerModel.find({
-			company: companyId
-		})
+		try {
+			return AnswerModel.find({
+				company: companyId
+			})
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
+		}
 	}
 
 	async getById(id: Types.ObjectId | string):Promise<AnswerInterface>{
 		try {
 			const answer = await AnswerModel.findById(id);
 			if (!answer) {
-				throw new Error('Answer not found');
+				throw new HttpException(404,'Answer not found');
 			}
 			return answer;
-		} catch (e) {
-			throw new Error('Error fetching answer by ID: ' + e);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -36,11 +42,11 @@ class AnswerRepository{
 		try {
 			const answer = await AnswerModel.findByIdAndUpdate(id, data, { new: true, runValidators: true });
 			if (!answer) {
-				throw new Error(`Company with id ${id} not found`);
+				throw new HttpException(404, `Company with id ${id} not found`);
 			}
 			return answer;
-		} catch (e) {
-			throw new Error(`Server error: ${e}`);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -48,11 +54,11 @@ class AnswerRepository{
 		try {
 			const result = await AnswerModel.findByIdAndDelete(id);
 			if (!result) {
-				throw new Error(`Answer with id ${id} not found`);
+				throw new HttpException(404,`Answer with id ${id} not found`);
 			}
 			return { message: 'Answer successfully deleted', result };
-		} catch (e) {
-			throw new Error(`Server error: ${e}`);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -65,8 +71,8 @@ class AnswerRepository{
 			);
 
 			return answer;
-		} catch (e) {
-			throw new Error(`Server error: ${e}`);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -74,8 +80,8 @@ class AnswerRepository{
 		try {
 			const answer = await AnswerModel.findOne({user: userId, company: companyId})
 			return answer
-		} catch (e) {
-			throw new Error(`Server error: ${e}`);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 }

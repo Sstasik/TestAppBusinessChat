@@ -4,16 +4,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {Types} from "mongoose";
 import {UserAuthResponse} from "../common/interfaces/responses.interface";
+import {HttpException} from "../middlwares/errror-handling/httpException";
+import {handleServiceError} from "../middlwares/errror-handling/throwException";
 
 class AuthService {
 
-	async registration(data: UserCreateInterface):Promise<UserAuthResponse> {
+	async register(data: UserCreateInterface):Promise<UserAuthResponse> {
 		try {
-			const existingUser = await UserService.getByEmail(data.email)
-			if (existingUser) {
-				throw new Error('User with this email already exists');
-			}
-
       const newUser = await UserService.create(data)
 			const token = this.generateToken(newUser._id, newUser.role);
 
@@ -26,8 +23,8 @@ class AuthService {
 				},
 				token,
 			};
-		} catch (e) {
-			throw new Error('Registration failed: ' + e);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 
@@ -35,12 +32,12 @@ class AuthService {
 		try {
 			const user = await UserService.getByEmail(email)
 			if (!user) {
-				throw new Error('Invalid email or password');
+				throw new HttpException(400,'Invalid email or password');
 			}
 
 			const isMatch = await bcrypt.compare(password, user.password);
 			if (!isMatch) {
-				throw new Error('Invalid email or password');
+				throw new HttpException(400, 'Invalid email or password');
 			}
 
 			const token = this.generateToken(user._id, user.role);
@@ -54,8 +51,8 @@ class AuthService {
 				},
 				token,
 			};
-		} catch (e) {
-			throw new Error('Login failed: ' + e);
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
 		}
 	}
 

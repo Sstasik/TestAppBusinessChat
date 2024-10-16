@@ -2,9 +2,9 @@ import {NextFunction, Request, Response} from 'express';
 import { AuthService } from "../services"
 
 class AuthController{
-	async registration(req: Request, res: Response, next: NextFunction):Promise<void>{
+	async register(req: Request, res: Response, next: NextFunction):Promise<void>{
 		try {
-			const user = await AuthService.registration(req.body)
+			const user = await AuthService.register(req.body)
 			res.status(201).json(user)
 		}catch (e) {
 			next(e)
