@@ -1,4 +1,4 @@
-import { UserService } from './index';
+import {CompanyService, UserService} from './index';
 import { UserCreateInterface } from '../common/interfaces/user.create.interface';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -20,6 +20,7 @@ class AuthService {
 					username: newUser.username,
 					role: newUser.role,
 					isPremium: newUser.isPremium,
+					companies: []
 				},
 				token,
 			};
@@ -42,12 +43,14 @@ class AuthService {
 
 			const token = this.generateToken(user._id, user.role);
 
+			const companies = await CompanyService.getAllByUser(user._id)
 			return {
 				user: {
 					_id: user._id,
 					username: user.username,
 					role: user.role,
 					isPremium: user.isPremium,
+					companies: companies
 				},
 				token,
 			};

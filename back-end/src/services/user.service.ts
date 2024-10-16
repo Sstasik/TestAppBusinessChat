@@ -3,6 +3,7 @@ import {UserCreateInterface} from "../common/interfaces/user.create.interface";
 import {Types} from "mongoose";
 import {UserInterface} from "../common/interfaces/modelInterfaces/user.interface";
 import {RoleEnum} from "../common/enums/role.enum";
+import {UserWithCompaniesInterface} from "../common/interfaces/modelInterfaces/user.with.companies.interface";
 
 class UserService{
 	async create(user: UserCreateInterface):Promise<UserInterface>{
@@ -13,8 +14,8 @@ class UserService{
 		return UserRepository.getAll()
 	}
 
-	async getById(id: Types.ObjectId | string):Promise<UserInterface>{
-		return UserRepository.getById(id)
+	async getById(id: Types.ObjectId | string):Promise<UserWithCompaniesInterface>{
+		return UserRepository.getUserWithCompanies(id)
 	}
 
 	async getByEmail(email: string):Promise<UserInterface | null>{

@@ -13,6 +13,10 @@ class CompanyService{
 		return CompanyRepository.getAll()
 	}
 
+	async getAllByUser(userId: string | Types.ObjectId):Promise<CompanyInterface[]>{
+		return CompanyRepository.getAllByUser(userId)
+	}
+
 	async getById(id: Types.ObjectId | string):Promise<CompanyInterface>{
 		return CompanyRepository.getById(id)
 	}

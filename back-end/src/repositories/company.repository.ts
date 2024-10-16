@@ -20,6 +20,16 @@ class CompanyRepository{
 		return CompanyModel.find()
 	}
 
+	async getAllByUser(userId: string | Types.ObjectId):Promise<CompanyInterface[]>{
+		try {
+			return CompanyModel.find({
+				admin: userId
+			})
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
+		}
+	}
+
 	async getById(id: Types.ObjectId | string):Promise<CompanyInterface>{
 		try {
 			const company = await CompanyModel.findById(id);

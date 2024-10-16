@@ -1,25 +1,19 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import errorMiddleware from "./middlwares/errror-handling/error-handling";
 import routers from "./routers";
-
-
-// ADD LOGIN WITH COMPANIES
-// ADD LOGIC WITH PREMIUM ACCOUNT
 
 dotenv.config();
 
 const app: Application = express();
 
+app.use(cors());
+
 app.use(express.json());
 
 app.use('/', routers);
-
-
-app.get('/', (req: Request, res: Response) => {
-	res.send('Hello from Express + TypeScript!');
-});
 
 app.use(errorMiddleware);
 

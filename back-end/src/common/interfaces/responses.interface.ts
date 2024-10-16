@@ -19,6 +19,7 @@ export interface UserAuthResponse{
 		username: string,
 		role: RoleEnum,
 		isPremium: boolean,
+		companies: CompanyInterface[]
 	},
 	token: string,
 }
