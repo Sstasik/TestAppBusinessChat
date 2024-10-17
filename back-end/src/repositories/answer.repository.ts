@@ -5,6 +5,7 @@ import {AnswerInterface} from "../common/interfaces/modelInterfaces/answer.inter
 import {DeleteAnswerResponse} from "../common/interfaces/responses.interface";
 import {handleServiceError} from "../middlwares/errror-handling/throwException";
 import {HttpException} from "../middlwares/errror-handling/httpException";
+import {Edges} from "../common/interfaces/question.interface";
 
 
 class AnswerRepository{
@@ -79,6 +80,39 @@ class AnswerRepository{
 	async getByUserAndCompany(userId: string | Types.ObjectId,  companyId: string | Types.ObjectId):Promise<AnswerInterface | null>{
 		try {
 			const answer = await AnswerModel.findOne({user: userId, company: companyId})
+			return answer
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
+		}
+	}
+
+	async addAnswerToArray(
+		userId: string | Types.ObjectId,
+		companyId: string | Types.ObjectId,
+		data: Edges):Promise<AnswerInterface> {
+		try {
+			const answer = await AnswerModel.findOneAndUpdate(
+				{ user: userId, company: companyId },
+				{ $push: { answers: data } },
+				{ new: true, upsert: true, runValidators: true }
+			);
+
+			return answer;
+		} catch (e: HttpException | unknown) {
+			handleServiceError(e)
+		}
+	}
+
+	async cleanAnswers(
+		userId: string | Types.ObjectId,
+		companyId: string | Types.ObjectId,
+	):Promise<AnswerInterface>{
+		try {
+			const answer = await AnswerModel.findOneAndUpdate(
+				{ user: userId, company: companyId },
+				{ $set: { answers: [] } },
+				{ new: true, upsert: true, runValidators: true }
+			);
 			return answer
 		} catch (e: HttpException | unknown) {
 			handleServiceError(e)

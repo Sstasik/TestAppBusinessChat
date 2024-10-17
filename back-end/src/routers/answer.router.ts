@@ -16,6 +16,10 @@ answerRouter.get('/:id', authMiddleware, AnswerController.getById);
 
 answerRouter.patch('/byCompany/:companyId', authMiddleware, AnswerController.updateOrCreate);
 
+answerRouter.patch('/addAnswer/:companyId', authMiddleware, AnswerController.addAnswerToArray);
+
+answerRouter.patch('/cleanAnswers/:companyId', authMiddleware, AnswerController.cleanAnswers);
+
 answerRouter.get('/byCompany/:companyId', authMiddleware,  AnswerController.getByUserAndCompany);
 
 answerRouter.patch('/:id',authMiddleware, AnswerController.update);

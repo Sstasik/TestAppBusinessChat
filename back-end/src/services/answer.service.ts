@@ -3,6 +3,7 @@ import { AnswerRepository } from "../repositories"
 import {Types} from "mongoose";
 import {AnswerInterface} from "../common/interfaces/modelInterfaces/answer.interface";
 import {DeleteAnswerResponse} from "../common/interfaces/responses.interface";
+import {Edges} from "../common/interfaces/question.interface";
 
 class AnswerService {
 	async createAnswer(data: AnswerCreateInterface):Promise<AnswerInterface> {
@@ -39,6 +40,20 @@ class AnswerService {
 
 	async deleteAnswer(id: string | Types.ObjectId):Promise<DeleteAnswerResponse> {
 		return AnswerRepository.deleteAnswer(id);
+	}
+
+	async addAnswerToArray(
+		userId: string | Types.ObjectId,
+		companyId: string | Types.ObjectId,
+		data: Edges):Promise<AnswerInterface> {
+    return AnswerRepository.addAnswerToArray(userId, companyId, data)
+	}
+
+	async cleanAnswers(
+		userId: string | Types.ObjectId,
+		companyId: string | Types.ObjectId)
+		:Promise<AnswerInterface> {
+		return AnswerRepository.cleanAnswers(userId, companyId)
 	}
 }
 

@@ -10,7 +10,7 @@ interface Nodes{
 	dragging?: boolean
 };
 
-interface Edges {
+export interface Edges {
 	id: string;
 	type: string;
 	data: { label: string; value: string };

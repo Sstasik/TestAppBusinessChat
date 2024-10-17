@@ -75,6 +75,27 @@ class AnswerController {
 			next(e);
 		}
 	}
+
+	async addAnswerToArray(req: Request, res: Response, next: NextFunction):Promise<void> {
+		try {
+			const { companyId } = req.params;
+			const { body } = req
+			const answer = await AnswerService.addAnswerToArray(req.user.id, companyId, body);
+			res.status(200).json(answer);
+		} catch (e) {
+			next(e);
+		}
+	}
+
+	async cleanAnswers(req: Request, res: Response, next: NextFunction):Promise<void> {
+		try {
+			const { companyId } = req.params;
+			const answer = await AnswerService.cleanAnswers(req.user.id, companyId);
+			res.status(200).json(answer);
+		} catch (e) {
+			next(e);
+		}
+	}
 }
 
 export default new AnswerController();

@@ -16,6 +16,6 @@ companyRouter.get('/:id', authMiddleware, CompanyController.getById)
 
 companyRouter.patch('/:id', authMiddleware, adminMiddleware, companyAdminMiddleware, CompanyController.update )
 
-companyRouter.patch('/:id', authMiddleware, adminMiddleware, companyAdminMiddleware, CompanyController.delete )
+companyRouter.delete('/:id', authMiddleware, adminMiddleware, companyAdminMiddleware, CompanyController.delete )
 
 export default companyRouter;
